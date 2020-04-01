@@ -31,6 +31,22 @@
             "Type" : "Number",
             "AllowedValues" : [ 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653 ]
         },
+        "HmacAlgorithm" : {
+            "Description" : "What algorithm would you like to use for the HMAC generation? (This is dependent on the available algorithms supported by the version of OpenSSL on the platform)",
+            "Default" : "sha1",
+            "Type" : "String"
+        },
+        "HmacKey" : {
+            "Description" : "What is the HMAC secret key used to generate the cryptographic HMAC hash",
+            "Default" : "",
+            "Type" : "String"
+        },
+        "HmacCompulsory" : {
+            "Description" : "Is the presence of the HMAC hash in the URL compulsory",
+            "Default" : "No",
+            "Type" : "String",
+            "AllowedValues" : [ "No", "Yes" ]
+        },
         "AutoWebP" : {
             "Description" : "Would you like to enable automatic WebP based on accept headers? Select 'Yes' if so.",
             "Default" : "No",
@@ -56,6 +72,10 @@
                 {
                     "Label": { "default": "Event Logging" },
                     "Parameters": [ "LogRetentionPeriod" ]
+                },
+                {
+                    "Label": { "default": "HMAC Hash" },
+                    "Parameters": [ "HmacAlgorithm", "HmacKey", "HmacCompulsory" ]
                 }
             ]
         }
@@ -392,7 +412,16 @@
                             "Ref" : "SourceBuckets"
                         },
                         "REWRITE_MATCH_PATTERN" : "",
-                        "REWRITE_SUBSTITUTION" : ""
+                        "REWRITE_SUBSTITUTION" : "",
+                        "HMAC_ALGORITHM" : {
+                            "Ref" : "HmacAlgorithm"
+                        },
+                        "HMAC_KEY" : {
+                            "Ref" : "HmacKey"
+                        },
+                        "HMAC_COMPULSORY" : {
+                            "Ref" : "HmacCompulsory"
+                        }
                     }
                 }
             }
