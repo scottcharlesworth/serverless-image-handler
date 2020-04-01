@@ -16,6 +16,13 @@ const crypto = require('crypto');
 class SecurityHandler {
 
     /**
+     * The character used to split the HMAC hash from the encoded string.
+     * (Remember to also change this in the 'demo-ui')
+     * @type {string}
+     */
+    hmacSplitter = ".";
+
+    /**
      * Main method for processing incoming URL for HMAC presence.
      * @param {Object} event - Lambda request body.
      */
