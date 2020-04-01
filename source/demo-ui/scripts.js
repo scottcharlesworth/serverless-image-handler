@@ -11,6 +11,8 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
+window.hmacSplitter = ".";
+
 function importOriginalImage() {
     // Gather the bucket name and image key
     const bucketName = $(`#txt-bucket-name`).first().val();
@@ -23,7 +25,7 @@ function importOriginalImage() {
     }
     const strRequest = JSON.stringify(request);
     const encRequest = btoa(strRequest);
-    const requestPath = (hmacRequired) ? generateHmac(encRequest) + "_" + encRequest : encRequest;
+    const requestPath = (hmacRequired) ? generateHmac(encRequest) + window.hmacSplitter + encRequest : encRequest;
     // Import the image data into the element
     $(`#img-original`)
         .attr(`src`, `${appVariables.apiEndpoint}/${requestPath}`)
@@ -92,7 +94,7 @@ function getPreviewImage() {
     const str = JSON.stringify(request);
     const enc = btoa(str);
     const hmacHash = generateHmac(enc);
-    const requestPath = (hmacRequired) ? hmacHash + "_" + enc : enc;
+    const requestPath = (hmacRequired) ? hmacHash + window.hmacSplitter + enc : enc;
     // Fill the preview image
     $(`#img-preview`).attr(`src`, `${appVariables.apiEndpoint}/${requestPath}`);
     // Fill the request body field
