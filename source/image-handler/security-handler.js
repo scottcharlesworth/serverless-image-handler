@@ -28,8 +28,7 @@ class SecurityHandler {
      */
     async process(event) {
         const path = event["path"];
-        const hmacSplitter = "_";
-        const pathIncludesHmacSplitter = path.includes(hmacSplitter);
+        const pathIncludesHmacSplitter = path.includes(this.hmacSplitter);
         const hmacAlgorithm = process.env.HMAC_ALGORITHM ? process.env.HMAC_ALGORITHM : "sha1";
         const hmacKey = process.env.HMAC_KEY ? process.env.HMAC_KEY : null;
         const hmacCompulsory = (process.env.HMAC_COMPULSORY === "Yes");
@@ -57,7 +56,7 @@ class SecurityHandler {
             });
         } else if (pathIncludesHmacSplitter && hmacKey) {
             // The path includes the HMAC splitter, and a HMAC key is set
-            const splitPath = await this.splitPath(path, hmacSplitter);
+            const splitPath = await this.splitPath(path, this.hmacSplitter);
             // Set up the HMAC
             const hmac = crypto.createHmac(hmacAlgorithm, hmacKey);
             // Update the value

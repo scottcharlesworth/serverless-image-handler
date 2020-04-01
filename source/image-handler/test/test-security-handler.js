@@ -40,7 +40,7 @@ describe('process()', function() {
     describe('002/hmacCompulsoryNoKeySet', function() {
         it(`Should throw an error if the HMAC is compulsory but no key has been set`, async function() {
             // Arrange
-            const hmacSplitter = "_";
+            const hmacSplitter = new SecurityHandler().hmacSplitter;
             const hmacHash = '17b1131b7d6f08a29065fadb8b54b727ba25188a';
             const enc = 'eyJidWNrZXQiOiJ2YWxpZEJ1Y2tldCIsImtleSI6InZhbGlkS2V5IiwiZWRpdHMiOnsiZ3JheXNjYWxlIjp0cnVlfX0=';
             const event = {
@@ -85,7 +85,7 @@ describe('process()', function() {
     describe('004/hmacSplitterPresentNoKeySet', function() {
         it(`Should throw an error if the HMAC splitter is present but no key has been set`, async function() {
             // Arrange
-            const hmacSplitter = "_";
+            const hmacSplitter = new SecurityHandler().hmacSplitter;
             const enc = 'eyJidWNrZXQiOiJ2YWxpZEJ1Y2tldCIsImtleSI6InZhbGlkS2V5IiwiZWRpdHMiOnsiZ3JheXNjYWxlIjp0cnVlfX0=';
             const event = {
                 path : "/" + hmacSplitter + enc
@@ -108,7 +108,7 @@ describe('process()', function() {
     describe('005/hmacProvidedMismatch', function() {
         it(`Should throw an error if the HMAC provided is incorrect for the encoded string`, async function() {
             // Arrange
-            const hmacSplitter = "_";
+            const hmacSplitter = new SecurityHandler().hmacSplitter;
             const hmacHash = '469a67474a79221397a6c665986fae3682b70510'; // wrong-secret
             const enc = 'eyJidWNrZXQiOiJ2YWxpZEJ1Y2tldCIsImtleSI6InZhbGlkS2V5IiwiZWRpdHMiOnsiZ3JheXNjYWxlIjp0cnVlfX0=';
             const event = {
@@ -133,7 +133,7 @@ describe('process()', function() {
         it(`Should pass if the original event object is returned with HMAc removed from the path 
             when HMAC is valid`, async function() {
             // Arrange
-            const hmacSplitter = "_";
+            const hmacSplitter = new SecurityHandler().hmacSplitter;
             const hmacHash = '17b1131b7d6f08a29065fadb8b54b727ba25188a';
             const enc = 'eyJidWNrZXQiOiJ2YWxpZEJ1Y2tldCIsImtleSI6InZhbGlkS2V5IiwiZWRpdHMiOnsiZ3JheXNjYWxlIjp0cnVlfX0=';
             const event = {
@@ -163,7 +163,7 @@ describe('splitPath()', function() {
     describe('001/default', function() {
         it(`Should pass if an object containing HMAC and encoded string is returned`, async function() {
             // Arrange
-            const hmacSplitter = "_";
+            const hmacSplitter = new SecurityHandler().hmacSplitter;
             const hmacHash = '17b1131b7d6f08a29065fadb8b54b727ba25188a';
             const enc = 'eyJidWNrZXQiOiJ2YWxpZEJ1Y2tldCIsImtleSI6InZhbGlkS2V5IiwiZWRpdHMiOnsiZ3JheXNjYWxlIjp0cnVlfX0=';
             const path = "/" + hmacHash + hmacSplitter + enc;
