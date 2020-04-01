@@ -15,6 +15,7 @@ function importOriginalImage() {
     // Gather the bucket name and image key
     const bucketName = $(`#txt-bucket-name`).first().val();
     const keyName = $(`#txt-key-name`).first().val();
+    const hmacRequired = ($(`#select-hmac-generate`).first().val() === "true");
     // Assemble the image request
     const request = {
         bucket: bucketName,
@@ -22,9 +23,10 @@ function importOriginalImage() {
     }
     const strRequest = JSON.stringify(request);
     const encRequest = btoa(strRequest);
+    const requestPath = (hmacRequired) ? generateHmac(encRequest) + "_" + encRequest : encRequest;
     // Import the image data into the element
     $(`#img-original`)
-        .attr(`src`, `${appVariables.apiEndpoint}/${encRequest}`)
+        .attr(`src`, `${appVariables.apiEndpoint}/${requestPath}`)
         .attr(`data-bucket`, bucketName)
         .attr(`data-key`, keyName);
 }
@@ -77,6 +79,7 @@ function getPreviewImage() {
     // Gather the bucket and key names
     const bucketName = $(`#img-original`).first().attr(`data-bucket`);
     const keyName = $(`#img-original`).first().attr(`data-key`);
+    const hmacRequired = ($(`#select-hmac-generate`).first().val() === "true");
     // Set up the request body
     const request = {
         bucket: bucketName,
@@ -88,12 +91,14 @@ function getPreviewImage() {
     // Setup encoded request
     const str = JSON.stringify(request);
     const enc = btoa(str);
+    const hmacHash = generateHmac(enc);
+    const requestPath = (hmacRequired) ? hmacHash + "_" + enc : enc;
     // Fill the preview image
-    $(`#img-preview`).attr(`src`, `${appVariables.apiEndpoint}/${enc}`);
+    $(`#img-preview`).attr(`src`, `${appVariables.apiEndpoint}/${requestPath}`);
     // Fill the request body field
     $(`#preview-request-body`).html(JSON.stringify(request, undefined, 2));
     // Fill the encoded URL field
-    $(`#preview-encoded-url`).val(`${appVariables.apiEndpoint}/${enc}`);
+    $(`#preview-encoded-url`).val(`${appVariables.apiEndpoint}/${requestPath}`);
 }
 
 function hexToRgbA(hex, _alpha) {
@@ -111,6 +116,13 @@ function hexToRgbA(hex, _alpha) {
 
 function resetEdits() {
     $('.form-control').val('');
-	document.getElementById('editor-resize-mode').selectedIndex = 0;
-	$(".form-check-input").prop('checked', false);
+    document.getElementById('editor-resize-mode').selectedIndex = 0;
+    $(".form-check-input").prop('checked', false);
+}
+
+function generateHmac(encodedBase64) {
+    const hmacAlgorithm = $(`#select-hmac-algorithm`).first().val();
+    const hmacKey = $(`#txt-hmac-key`).first().val();
+    var hash = CryptoJS[hmacAlgorithm](encodedBase64, hmacKey);
+    return CryptoJS.enc.Hex.stringify(hash);
 }

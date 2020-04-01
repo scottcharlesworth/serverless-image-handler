@@ -13,6 +13,9 @@
 .card-original-image {
     margin-top: 20px !important;
 }
+.card-hmac-generate {
+    margin-top: 20px !important;
+}
 #img-original {
     max-height: 100% !important; 
     max-width: 100% !important;
