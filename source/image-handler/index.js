@@ -13,11 +13,27 @@
 
 const ImageRequest = require('./image-request.js');
 const ImageHandler = require('./image-handler.js');
+const SecurityHandler = require('./security-handler.js');
 
 exports.handler = async (event) => {
     console.log(event);
     const imageRequest = new ImageRequest();
     const imageHandler = new ImageHandler();
+    const securityHandler = new SecurityHandler();
+
+    try {
+        event = await securityHandler.process(event);
+    } catch (err) {
+        console.log(err);
+
+        return {
+            "statusCode": err.status,
+            "headers" : getResponseHeaders(true),
+            "body": JSON.stringify(err),
+            "isBase64Encoded": false
+        };
+    }
+
     try {
         const request = await imageRequest.setup(event);
         console.log(request);
